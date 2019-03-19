@@ -7,7 +7,11 @@ public class Virus {
 	private String gene;
 	
 	public Virus(int bpCount, String gene, int year, String definition, String origin) {
-		
+		this.gene = gene;
+		this.year = year;
+		this.definition = definition;
+		this.origin = origin;
+		reference = bpCount;
 	}
 	
 	public int getYear() {

@@ -16,6 +16,11 @@ public class VirusClient {
 			int bp = parse.nextInt();
 			parse.next();
 			String gene = parse.next();
+			if(gene.contains("DNA")) {
+				gene = "DNA";
+			} else if(gene.contains("RNA")) {
+				gene = "RNA";
+			}
 			parse.next();
 			parse.next();
 			String dateLine = parse.next();
@@ -43,11 +48,11 @@ public class VirusClient {
 //			System.out.println(year);
 //			System.out.println(origin);
 			vArray.add(new Virus(bp, gene, year, def, origin));
-			System.out.println(vArray.toString());
+//			System.out.println(vArray.toString());
 			
 		}
 		
-		VirusCollection vcollection = new VirusCollection(vArray);
+		
 		
 		boolean running = true;
 		
@@ -66,6 +71,7 @@ public class VirusClient {
 
 		
 		while(running) {
+			VirusCollection vcollection = new VirusCollection(vArray);
 			enterCommand();
 			
 			Scanner s = new Scanner(System.in);
@@ -110,10 +116,24 @@ public class VirusClient {
 				System.out.println();
 			} else if(input.equals("Sort")) {
 				input = s.next();
-				if(input.equals("DNA")) {
-					
-				} else if (input.equals("RNA")) {
-					
+				if(input.equals("Gene")) {
+					vcollection.sortGene();
+				} else {
+					System.out.println("Invalid Input");
+				}
+			} else if(input.equals("Filter")) {
+				input = s.next();
+				if(input.equals("Gene")) {
+					input = s.next();
+					if(input.equals("DNA")) {
+						vcollection.filterGene("DNA");
+					} else if(input.equals("RNA")) {
+						vcollection.filterGene("RNA");
+					} else {
+						System.out.println("Invalid Input");
+					}
+				} else {
+					System.out.println("Invalid Input");
 				}
 			}
 		}
