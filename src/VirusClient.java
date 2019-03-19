@@ -1,9 +1,14 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class VirusClient {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
+		ArrayList<Virus> vArray = parse();
+		
 		boolean running = true;
 		
 		System.out.println(" __      ___                  _____        _        _                    \r\n" + 
@@ -21,28 +26,15 @@ public class VirusClient {
 
 		
 		while(running) {
+			VirusCollection vcollection = new VirusCollection(vArray);
 			enterCommand();
 			
 			Scanner s = new Scanner(System.in);
 			String input = s.next();
 			
 			if(input.equals("list")) {
-				System.out.println();
-				System.out.println();
-				File[] dirFiles = new File("files/").listFiles();
-				System.out.println("8888888888 d8b 888                        888                            888               888    \r\n" + 
-						"888        Y8P 888                        888                            888               888    \r\n" + 
-						"888            888                        888                            888               888    \r\n" + 
-						"8888888    888 888  .d88b.  .d8888b       888      .d88b.   8888b.   .d88888  .d88b.   .d88888    \r\n" + 
-						"888        888 888 d8P  Y8b 88K           888     d88\"\"88b     \"88b d88\" 888 d8P  Y8b d88\" 888    \r\n" + 
-						"888        888 888 88888888 \"Y8888b.      888     888  888 .d888888 888  888 88888888 888  888    \r\n" + 
-						"888        888 888 Y8b.          X88      888     Y88..88P 888  888 Y88b 888 Y8b.     Y88b 888    \r\n" + 
-						"888        888 888  \"Y8888   88888P'      88888888 \"Y88P\"  \"Y888888  \"Y88888  \"Y8888   \"Y88888    \r\n" );
-				for(int i = 0; i<dirFiles.length; i++) {
-					System.out.println(dirFiles[i].getName());
-				}
-				System.out.println();
-			} else if(input.equals("help")) {
+				vcollection.list();
+			} else if(input.toLowerCase().equals("help")) {
 				System.out.println();
 				System.out.println();
 				
@@ -61,13 +53,94 @@ public class VirusClient {
 						"888888 888888 888888 888888 888888\r\n");
 				System.out.println();
 				System.out.println("list: lists all files in directory.");
+				System.out.println("Filter [Gene] [DNA,RNA]: lists all files in directory.");
 				System.out.println();
 				System.out.println();
+			} else if(input.toLowerCase().equals("sort")) {
+				input = s.next();
+				if(input.toLowerCase().equals("gene")) {
+					vcollection.sortGene();
+				} else {
+					System.out.println("Invalid Input");
+				}
+			} else if(input.toLowerCase().equals("filter")) {
+				input = s.next();
+				if(input.toLowerCase().equals("gene")) {
+					input = s.next();
+					if(input.toLowerCase().equals("dna")) {
+						vcollection.filterGene("DNA");
+					} else if(input.toLowerCase().equals("rna")) {
+						vcollection.filterGene("RNA");
+					} else {
+						System.out.println("Invalid Input");
+					}
+				} else {
+					System.out.println("Invalid Input");
+				}
 			}
 		}
 	}
 	
+	public static void topShell() {
+		System.out.println("_");
+	}
+	
+	public static void bottomShell() {
+		
+	}
+	
 	public static void enterCommand() {
 		System.out.println("Enter Command(Type 'help' for a list of commands): ");
+	}
+	public static ArrayList<Virus> parse() {
+		File[] dirFiles = new File("files/").listFiles();
+		ArrayList<Virus> array = new ArrayList<Virus>();
+		for(int i = 0; i<dirFiles.length; i++) {
+			Scanner parse = null;
+			try {
+				parse = new Scanner(dirFiles[i]);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			parse.next();
+			parse.next();
+			int bp = parse.nextInt();
+			parse.next();
+			String gene = parse.next();
+			if(gene.contains("DNA")) {
+				gene = "DNA";
+			} else if(gene.contains("RNA")) {
+				gene = "RNA";
+			}
+			parse.next();
+			parse.next();
+			String dateLine = parse.next();
+			Scanner dateParse = new Scanner(dateLine).useDelimiter("-");
+			dateParse.next();
+			dateParse.next();
+			int year = dateParse.nextInt();
+			parse.next();
+			String def = null;
+			while(!parse.hasNext("ACCESSION")) {
+				if(def == null) {
+					def = parse.next();
+				} else {
+					def = def + " " + parse.next();
+				}
+			}
+			try {
+				parse = new Scanner(dirFiles[i]).useDelimiter("ORIGIN");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			parse.next();
+			String origin = parse.next();
+			parse = new Scanner(origin).useDelimiter("//");
+			origin = parse.next();
+
+			array.add(new Virus(bp, gene, year, def, origin));
+		}
+		System.out.println("parsed");
+		return array;
 	}
 }
