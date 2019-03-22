@@ -9,8 +9,24 @@ public class VirusCollection {
 		this.collection = collection;
 	}
 	
+	public void filterDefinition(char s) {
+		for(int i = 0; i<collection.size(); i++) {
+			if(collection.get(i).getDefinition().charAt(0) != s) {
+				collection.remove(i);
+				i--;
+			}
+		}
+		printList();	
+	}
+	
 	public void filterDefinition(String s) {
-		
+		for(int i = 0; i<collection.size(); i++) {
+			if(!collection.get(i).getDefinition().contains(s)) {
+				collection.remove(i);
+				i--;
+			}
+		}
+		printList();
 	}
 	
 	public void filterReference(Range r) {
@@ -26,7 +42,6 @@ public class VirusCollection {
 	}
 	
 	public void filterGene(String s) {
-		System.out.println("Pre Filter" + collection);
 		for(int i = 0; i<collection.size(); i++) {
 			if(s.equals("DNA") && collection.get(i).getGene().equals("RNA")) {
 				collection.remove(i);
@@ -60,53 +75,37 @@ public class VirusCollection {
 	public void sortGene() {
 		System.out.println("Gene");
 		
+		int index = 0;
+		
 		for(int i = 0; i<collection.size(); i++) {
-			System.out.println(i);
-			System.out.println(collection.get(i).getGene());
-			String gene = collection.get(i).getGene();
-			if(gene.equals("DNA")) {
-				collection.add(0, collection.get(i));
-				collection.remove(i);
+			index++;
+			System.out.println(collection.get(index).getGene());
+			String gene = collection.get(index).getGene();
+			if(gene.equals("RNA")) {
+				collection.add(collection.get(index));
+				collection.remove(index);
+				index--;
 			}
 		}
 		System.out.println(collection);
-		for(int i = 0; i<collection.size(); i++) {
-//			System.out.println(collection.get(i).getDefinition());
-			System.out.println(collection.get(i).getGene());
-		}
-		
-//		boolean searching = true;
-//		for(int i = 0; i<collection.size()-1; i++) {
-//			int min = i;
-//			searching = true;
-//			for(int j = i + 1; j<collection.size() && searching; j++) {
-//				if(collection.get(j).getGene().compareTo(collection.get(min).getGene()) < 0) {
-//					min = j;
-//				}
-//			}
-//			Virus temp = collection.get(i);
-//			collection.add(i, collection.get(min));
-//			collection.add(min, temp);
-//		}
-//		for(int i = 0; i<collection.size(); i++) {
-////			System.out.println(collection.get(i).getDefinition());
-//			System.out.println(collection.get(i).getGene());
-//		}
+		printList();
+		System.out.println();
 	}
 	
 	private void printList() {
+		if(collection.size() == 0) {
+			System.out.println("Nothing To Print");
+		}
 		for(int i = 0; i<collection.size(); i++) {
 			System.out.println("__");
 			System.out.println("| " + collection.get(i).getDefinition());
 			System.out.println("| " + collection.get(i).getYear());
 			System.out.println("| " + collection.get(i).getReference());
 			System.out.println("| " + collection.get(i).getGene());
-//			System.out.println("| " + collection.g et(i).getOrigin());
+//			System.out.println("| " + collection.get(i).getOrigin());
 			System.out.println("__");
 		}
-		System.out.println("Post Filter" + collection);
 		collection = VirusClient.parse();
-		System.out.println("Post Parse" + collection);
 	}
 	
 	public void list() {

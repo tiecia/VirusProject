@@ -8,6 +8,7 @@ public class VirusClient {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		ArrayList<Virus> vArray = parse();
+		VirusCollection vcollection = new VirusCollection(vArray);
 		
 		boolean running = true;
 		
@@ -26,7 +27,6 @@ public class VirusClient {
 
 		
 		while(running) {
-			VirusCollection vcollection = new VirusCollection(vArray);
 			enterCommand();
 			
 			Scanner s = new Scanner(System.in);
@@ -53,9 +53,11 @@ public class VirusClient {
 						"888888 888888 888888 888888 888888\r\n");
 				System.out.println();
 				System.out.println("list: lists all files in directory.");
-				System.out.println("Filter [Gene] [DNA,RNA]: lists all files in directory.");
+				System.out.println("filter [gene] <data>: filters the list by the spesified <data>, where <data> can be a single value or range depending on the field.");
+				System.out.println("sort [gene]: sorts by the spesified field.");
 				System.out.println();
 				System.out.println();
+			//SORT
 			} else if(input.toLowerCase().equals("sort")) {
 				input = s.next();
 				if(input.toLowerCase().equals("gene")) {
@@ -63,6 +65,7 @@ public class VirusClient {
 				} else {
 					System.out.println("Invalid Input");
 				}
+			//FILTER
 			} else if(input.toLowerCase().equals("filter")) {
 				input = s.next();
 				if(input.toLowerCase().equals("gene")) {
@@ -74,19 +77,21 @@ public class VirusClient {
 					} else {
 						System.out.println("Invalid Input");
 					}
+				} else if(input.toLowerCase().equals("definition")) {
+					if(input.length() == 1) {
+						vcollection.filterDefinition(input.charAt(0));
+					} else {
+						vcollection.filterDefinition(input);
+					}
 				} else {
 					System.out.println("Invalid Input");
 				}
+			//INVALID INPUT
+			} else {
+				System.out.println("Invalid Input");
 			}
+			
 		}
-	}
-	
-	public static void topShell() {
-		System.out.println("_");
-	}
-	
-	public static void bottomShell() {
-		
 	}
 	
 	public static void enterCommand() {
@@ -140,7 +145,6 @@ public class VirusClient {
 
 			array.add(new Virus(bp, gene, year, def, origin));
 		}
-		System.out.println("parsed");
 		return array;
 	}
 }
