@@ -35,6 +35,15 @@ public class Virus {
 	}
 	
 	public String toString() {
-		return "toString";
+		return definition;
+	}
+	
+	public String printVirus() {
+		return "Definition: " + definition + "\n\n" +
+				"Year Discovered: " + year + "\n" + 
+				"Gene: " + gene + "\n" +
+				"Reference: " + reference + "\n\n" + 
+				"Origin: " + "\n" + origin;
+				
 	}
 }
