@@ -37,7 +37,6 @@ public class VirusClient {
 			} else if(input.toLowerCase().equals("help")) {
 				System.out.println();
 				System.out.println();
-				
 				System.out.println("888    888          888              \r\n" + 
 						"888    888          888              \r\n" + 
 						"888    888          888              \r\n" + 
@@ -60,14 +59,20 @@ public class VirusClient {
 			//SORT
 			} else if(input.toLowerCase().equals("sort")) {
 				input = s.next();
+				//GENE
 				if(input.toLowerCase().equals("gene")) {
 					vcollection.sortGene();
+				//DEFINITION
+				} else if(input.toLowerCase().equals("definition")) {
+					vcollection.sortDefinition();
 				} else {
 					System.out.println("Invalid Input");
 				}
+
 			//FILTER
 			} else if(input.toLowerCase().equals("filter")) {
 				input = s.next();
+				//GENE
 				if(input.toLowerCase().equals("gene")) {
 					input = s.next();
 					if(input.toLowerCase().equals("dna")) {
@@ -77,7 +82,11 @@ public class VirusClient {
 					} else {
 						System.out.println("Invalid Input");
 					}
+				//DEFINITION
 				} else if(input.toLowerCase().equals("definition")) {
+					input = s.next().toLowerCase();
+					System.out.println("Input: " + input);
+					System.out.println("Input Length: " + input.length());
 					if(input.length() == 1) {
 						vcollection.filterDefinition(input.charAt(0));
 					} else {

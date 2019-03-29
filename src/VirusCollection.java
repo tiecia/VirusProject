@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
 public class VirusCollection {
 	
 	public ArrayList<Virus> collection;
@@ -10,8 +12,9 @@ public class VirusCollection {
 	}
 	
 	public void filterDefinition(char s) {
+		System.out.println("Char");
 		for(int i = 0; i<collection.size(); i++) {
-			if(collection.get(i).getDefinition().charAt(0) != s) {
+			if(collection.get(i).getDefinition().toLowerCase().charAt(0) != s) {
 				collection.remove(i);
 				i--;
 			}
@@ -20,8 +23,9 @@ public class VirusCollection {
 	}
 	
 	public void filterDefinition(String s) {
+		System.out.println("String");
 		for(int i = 0; i<collection.size(); i++) {
-			if(!collection.get(i).getDefinition().contains(s)) {
+			if(!collection.get(i).getDefinition().toLowerCase().contains(s)) {
 				collection.remove(i);
 				i--;
 			}
@@ -57,7 +61,25 @@ public class VirusCollection {
 	
 	
 	public void sortDefinition() {
-		
+		System.out.println("Sort Def");
+		boolean searching = true;
+		for(int i = 0; i<collection.size()-1; i++) {
+			System.out.println(collection.size());
+//			System.out.println(i);
+			int min = i;
+			searching = true;
+			for(int j = i + 1; j<collection.size() && searching; j++) {
+				if(collection.get(j).getDefinition().charAt(0) < collection.get(min).getDefinition().charAt(0)) {
+					min = j;
+				}
+//				System.out.println(j);
+			}
+			Virus temp = collection.get(i);
+			collection.add(i,collection.get(min));
+			collection.add(min, temp);
+		}
+		printList();
+		System.out.println("After Print");
 	}
 	
 	public void sortReference() {
@@ -72,7 +94,7 @@ public class VirusCollection {
 		
 	}
 	
-	public void sortGene() {
+	public ArrayList<Virus> sortGene() {
 		System.out.println("Gene");
 		
 		int index = 0;
@@ -90,6 +112,24 @@ public class VirusCollection {
 		System.out.println(collection);
 		printList();
 		System.out.println();
+		return collection;
+	}
+	
+	private int[] selectionSortForward(){
+		boolean searching = true;
+		for(int i = 0; i<collection.size()-1; i++) {
+			int min = i;
+			searching = true;
+			for(int j = i + 1; j<collection.size() && searching; j++) {
+				if(collection.get(j) < collection.get(min)) {
+					min = j;
+				}
+			}
+			int temp = list[i];
+			list[i] = list[min];
+			list[min] = temp;
+		}
+		return list;
 	}
 	
 	private void printList() {

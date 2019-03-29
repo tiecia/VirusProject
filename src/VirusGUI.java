@@ -106,7 +106,9 @@ public class VirusGUI {
 		mntmGene = new JMenuItem("Gene");
 		mntmGene.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				list = new JList(collection.sortGene());
+				vArray = collection.sortGene();
+//				list.setListData(vArray.toArray());
+				updateList();
 			}
 		});
 		mnSort.add(mntmGene);
@@ -116,5 +118,14 @@ public class VirusGUI {
 		
 		mntmGene_1 = new JMenuItem("Gene");
 		mnFilter.add(mntmGene_1);
+	}
+	
+	private void updateList() {
+		for(int i = 0; i<list.getModel().getSize(); i++) {
+			list.remove(i);
+		}
+		for(int i = 0; i<vArray.size(); i++) {
+			list.add(list, vArray.get(i));
+		}
 	}
 }
