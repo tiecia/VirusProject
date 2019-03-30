@@ -61,25 +61,31 @@ public class VirusCollection {
 	
 	
 	public void sortDefinition() {
-		System.out.println("Sort Def");
+		
+		System.out.println("sort def");
+		
+		Virus[] list = (Virus[]) collection.toArray();
+		
 		boolean searching = true;
-		for(int i = 0; i<collection.size()-1; i++) {
-			System.out.println(collection.size());
-//			System.out.println(i);
+		for(int i = 0; i<list.length-1; i++) {
 			int min = i;
 			searching = true;
-			for(int j = i + 1; j<collection.size() && searching; j++) {
-				if(collection.get(j).getDefinition().charAt(0) < collection.get(min).getDefinition().charAt(0)) {
+			for(int j = i + 1; j<list.length && searching; j++) {
+				if(list[j].getDefinition().charAt(0) < list[min].getDefinition().charAt(0)) {
 					min = j;
 				}
-//				System.out.println(j);
 			}
-			Virus temp = collection.get(i);
-			collection.add(i,collection.get(min));
-			collection.add(min, temp);
+			Virus temp = list[i];
+			list[i] = list[min];
+			list[min] = temp;
+		}
+		
+		collection.clear();
+		
+		for(int i = 0; i<list.length; i++) {
+			collection.add(list[i]);
 		}
 		printList();
-		System.out.println("After Print");
 	}
 	
 	public void sortReference() {
@@ -113,23 +119,6 @@ public class VirusCollection {
 		printList();
 		System.out.println();
 		return collection;
-	}
-	
-	private int[] selectionSortForward(){
-		boolean searching = true;
-		for(int i = 0; i<collection.size()-1; i++) {
-			int min = i;
-			searching = true;
-			for(int j = i + 1; j<collection.size() && searching; j++) {
-				if(collection.get(j) < collection.get(min)) {
-					min = j;
-				}
-			}
-			int temp = list[i];
-			list[i] = list[min];
-			list[min] = temp;
-		}
-		return list;
 	}
 	
 	private void printList() {
