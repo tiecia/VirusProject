@@ -1,13 +1,15 @@
+package Regular;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class VirusClient {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws FileNotFoundException {
 		ArrayList<Virus> vArray = parse();
+		VirusCollection vcollection = new VirusCollection(vArray);
 		
 		boolean running = true;
 		
@@ -26,7 +28,7 @@ public class VirusClient {
 
 		
 		while(running) {
-			VirusCollection vcollection = new VirusCollection(vArray);
+			System.out.println();
 			enterCommand();
 			
 			Scanner s = new Scanner(System.in);
@@ -37,7 +39,6 @@ public class VirusClient {
 			} else if(input.toLowerCase().equals("help")) {
 				System.out.println();
 				System.out.println();
-				
 				System.out.println("888    888          888              \r\n" + 
 						"888    888          888              \r\n" + 
 						"888    888          888              \r\n" + 
@@ -53,18 +54,37 @@ public class VirusClient {
 						"888888 888888 888888 888888 888888\r\n");
 				System.out.println();
 				System.out.println("list: lists all files in directory.");
-				System.out.println("Filter [Gene] [DNA,RNA]: lists all files in directory.");
+				System.out.println("filter [gene, definition, reference, year, origin] <data>: filters the list by the spesified <data>, where <data> can be a single value or range depending on the field.");
+				System.out.println("sort [gene, definition, reference, year, origin]: sorts by the spesified field.");
 				System.out.println();
 				System.out.println();
+			//SORT
 			} else if(input.toLowerCase().equals("sort")) {
 				input = s.next();
+				//GENE
 				if(input.toLowerCase().equals("gene")) {
 					vcollection.sortGene();
+				//DEFINITION
+				} else if(input.toLowerCase().equals("definition")) {
+					vcollection.sortDefinition();
+				//REFERENCE
+				} else if(input.toLowerCase().equals("reference")){
+					vcollection.sortReference();
+				//YEAR
+				} else if(input.toLowerCase().equals("year")){
+					vcollection.sortYear();
+				//ORIGIN
+				} else if(input.toLowerCase().equals("origin")) {
+					vcollection.sortOrigin();
+				//INVALID INPUT
 				} else {
-					System.out.println("Invalid Input");
+					System.out.println("Invalid Input: Sort Type");
 				}
+
+			//FILTER
 			} else if(input.toLowerCase().equals("filter")) {
 				input = s.next();
+				//GENE
 				if(input.toLowerCase().equals("gene")) {
 					input = s.next();
 					if(input.toLowerCase().equals("dna")) {
@@ -72,26 +92,52 @@ public class VirusClient {
 					} else if(input.toLowerCase().equals("rna")) {
 						vcollection.filterGene("RNA");
 					} else {
-						System.out.println("Invalid Input");
+						System.out.println("Invalid Input: Gene Type");
 					}
+				//DEFINITION
+				} else if(input.toLowerCase().equals("definition")) {
+					input = s.next().toLowerCase();
+					if(input.length() == 1) {
+						vcollection.filterDefinition(input.charAt(0));
+					} else {
+						vcollection.filterDefinition(input);
+					}
+				//REFERENCE
+				} else if(input.toLowerCase().equals("reference")) {
+					Range r = Range.parse(s.next());
+					if(r==null) {
+						System.out.println("Invalid Input: Reference Range");
+					} else {
+						vcollection.filterReference(r);
+					}
+				//YEAR
+				} else if(input.toLowerCase().equals("year")) {
+					Range r = Range.parse(s.next());
+					if(r==null) {
+						System.out.println("Invalid Input: Date Range");
+					} else {
+						vcollection.filterYear(r);
+					}
+				//ORIGIN
+				} else if(input.toLowerCase().equals("origin")) {
+					vcollection.filterOrigin(s.next().toLowerCase());
+				//INVALID INPUT
 				} else {
-					System.out.println("Invalid Input");
+					System.out.println("Invalid Input: Filter Type");
 				}
+			//INVALID INPUT
+			} else {
+				System.out.println("Invalid Input");
 			}
+			
 		}
-	}
-	
-	public static void topShell() {
-		System.out.println("_");
-	}
-	
-	public static void bottomShell() {
-		
 	}
 	
 	public static void enterCommand() {
 		System.out.println("Enter Command(Type 'help' for a list of commands): ");
 	}
+	
+	@SuppressWarnings("resource")
 	public static ArrayList<Virus> parse() {
 		File[] dirFiles = new File("files/").listFiles();
 		ArrayList<Virus> array = new ArrayList<Virus>();
@@ -140,7 +186,6 @@ public class VirusClient {
 
 			array.add(new Virus(bp, gene, year, def, origin));
 		}
-		System.out.println("parsed");
 		return array;
 	}
 }
